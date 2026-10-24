@@ -1,17 +1,210 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#0b0b14">
-  <meta name="description" content="Enter the MochiVR UG Challenge Arena. Generate your next gaming challenge and put your skills to the test.">
-  <title>UG Challenge Arena | MochiVR</title>
-  <style>
-    :root {
-      --bg: #0b0b14;
-      --panel: #151526;
-      --purple: #a855f7;
-      --green: #a3ff70;
-      --text: #f5f3ff;
-      --muted: #b9b5cc;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0b0618">
+<title>UG Challenge Arena | MochiVR</title>
+<style>
+:root {
+  --bg:#0b0618;
+  --panel:#17102b;
+  --purple:#a855f7;
+  --green:#39ff14;
+  --text:#f4efff;
+  --muted:#b8adc9;
+}
+* { box-sizing:border-box; }
+body {
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:radial-gradient(ellipse at top,#261044,var(--bg) 65%);
+  color:var(--text);
+  min-height:100vh;
+}
+header {
+  padding:22px 16px;
+  text-align:center;
+  border-bottom:1px solid #422365;
+  background:#0b0618dd;
+}
+.logo { font-size:25px; font-weight:900; }
+.logo span { color:var(--green); }
+header a { color:var(--green); text-decoration:none; }
+main { max-width:900px; margin:auto; padding:28px 16px 60px; }
+h1 { text-align:center; font-size:clamp(30px,6vw,48px); margin:12px 0; }
+h1 span { color:var(--green); }
+.intro { text-align:center; color:var(--muted); line-height:1.6; }
+.panel {
+  margin:24px 0;
+  padding:22px;
+  background:var(--panel);
+  border:1px solid #7040a0;
+  border-radius:18px;
+  box-shadow:0 0 22px #a855f722;
+}
+label { display:block; margin:12px 0 7px; font-weight:bold; }
+select,button {
+  width:100%;
+  padding:13px;
+  border-radius:10px;
+  font-size:16px;
+}
+select {
+  background:#0b0618;
+  color:white;
+  border:1px solid #7040a0;
+}
+button {
+  cursor:pointer;
+  border:0;
+  font-weight:bold;
+  background:var(--green);
+  color:#080b08;
+  margin-top:12px;
+}
+button:hover { filter:brightness(1.1); }
+button.secondary {
+  background:transparent;
+  color:var(--green);
+  border:1px solid var(--green);
+}
+.challenge {
+  border:1px solid var(--green);
+  box-shadow:0 0 18px #39ff1420;
+  text-align:center;
+}
+.tag {
+  display:inline-block;
+  padding:6px 10px;
+  border-radius:30px;
+  background:#a855f726;
+  color:#d8b4fe;
+  font-size:13px;
+  font-weight:bold;
+}
+#challengeTitle { font-size:27px; margin:16px 0 10px; }
+#challengeText { line-height:1.7; color:var(--muted); }
+.scoreline { display:flex; gap:12px; margin-top:18px; }
+.scorebox {
+  flex:1; text-align:center; padding:15px 8px;
+  background:#0b0618; border-radius:12px;
+}
+.scorebox strong { display:block; font-size:25px; color:var(--green); }
+.small { color:var(--muted); font-size:13px; line-height:1.6; }
+footer { text-align:center; color:var(--muted); padding:20px; }
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">MOCHI<span>VR</span></div>
+  <p><a href="index.html">← Back to MochiVR homepage</a></p>
+</header>
+<main>
+  <h1>UG <span>Challenge Arena</span></h1>
+  <p class="intro">Pick your style. Generate a challenge. Prove your skills.</p>
+
+  <section class="panel">
+    <h2>⚙️ Build your challenge</h2>
+    <label for="mode">Challenge type</label>
+    <select id="mode">
+      <option value="any">Surprise me</option>
+      <option value="survival">Survival</option>
+      <option value="collection">Collection</option>
+      <option value="combat">Combat & bosses</option>
+      <option value="exploration">Exploration</option>
+      <option value="fishing">Fishing</option>
+      <option value="chaos">Chaos mode</option>
+    </select>
+
+    <label for="difficulty">Difficulty</label>
+    <select id="difficulty">
+      <option value="easy">Easy</option>
+      <option value="normal" selected>Normal</option>
+      <option value="hard">Hard</option>
+      <option value="legend">Legendary</option>
+    </select>
+
+    <button id="generate">🎲 Generate my challenge</button>
+  </section>
+
+  <section class="panel challenge" aria-live="polite">
+    <span class="tag" id="tag">YOUR NEXT MISSION</span>
+    <h2 id="challengeTitle">Ready, UG explorer?</h2>
+    <p id="challengeText">Generate a challenge to begin your run.</p>
+    <p id="rule" class="small"></p>
+    <button id="complete">✅ I completed it!</button>
+    <button id="skip" class="secondary">🔄 Give me another challenge</button>
+  </section>
+
+  <section class="panel">
+    <h2>🏆 Your run</h2>
+    <div class="scoreline">
+      <div class="scorebox"><strong id="score">0</strong>Points</div>
+      <div class="scorebox"><strong id="streak">0</strong>Win streak</div>
+      <div class="scorebox"><strong id="done">0</strong>Completed</div>
+    </div>
+    <button id="reset" class="secondary">Reset my run</button>
+    <p class="small">Your score stays in this browser on this device. It is not a public leaderboard.</p>
+  </section>
+  <p class="small">Fan-made community challenge tool. MochiVR is independent and is not an official UG developer website.</p>
+</main>
+<footer>MOCHIVR • PLAY YOUR WAY</footer>
+
+<script>
+const challenges = [
+  {type:"survival",title:"The Survivor",easy:"Survive for 5 minutes without returning to safety.",normal:"Survive for 10 minutes without returning to safety.",hard:"Survive for 15 minutes with no unnecessary healing.",legend:"Survive for 20 minutes and return with your loot intact."},
+  {type:"collection",title:"Loot Goblin",easy:"Collect 3 useful items on your next run.",normal:"Collect 5 useful items without ending your run early.",hard:"Collect 8 useful items in one run.",legend:"Collect 10 useful items and make it back safely."},
+  {type:"combat",title:"Fearless Fighter",easy:"Win one fight you would normally avoid.",normal:"Win 3 fights in one session.",hard:"Take on a difficult enemy without asking for help.",legend:"Defeat your chosen tough opponent and survive the aftermath."},
+  {type:"exploration",title:"Uncharted",easy:"Visit somewhere you have not explored properly.",normal:"Find 3 interesting places in one session.",hard:"Explore a new area without following your usual route.",legend:"Discover a new route and return safely with something to show for it."},
+  {type:"fishing",title:"Reel Deal",easy:"Catch 3 fish.",normal:"Catch 5 fish in one session.",hard:"Catch 8 fish without giving up.",legend:"Set a personal fishing record this session."},
+  {type:"chaos",title:"Wildcard",easy:"Try something new instead of your usual routine.",normal:"Complete 2 different activities in one session.",hard:"Switch activities 3 times and make progress in each.",legend:"Complete 3 different activities without abandoning your goals."}
+];
+const extras = {
+  easy:"Bonus rule: enjoy the run; no pressure.",
+  normal:"Bonus rule: no unnecessary shortcuts.",
+  hard:"Bonus rule: limit yourself to one attempt.",
+  legend:"Bonus rule: make it a clean run. No excuses!"
+};
+let current=null, score=0, streak=0, done=0;
+const $ = id => document.getElementById(id);
+function generate() {
+  const mode=$("mode").value, diff=$("difficulty").value;
+  let pool=challenges.filter(c=>mode==="any" || c.type===mode);
+  current=pool[Math.floor(Math.random()*pool.length)];
+  $("tag").textContent=diff.toUpperCase()+" • "+current.type.toUpperCase();
+  $("challengeTitle").textContent=current.title;
+  $("challengeText").textContent=current[diff];
+  $("rule").textContent=extras[diff];
+}
+$("generate").addEventListener("click",generate);
+$("skip").addEventListener("click",generate);
+$("complete").addEventListener("click",()=>{
+  if(!current) {
+    $("challengeText").textContent="Generate a challenge first, then mark it complete!";
+    return;
+  }
+  const diff=$("difficulty").value;
+  const points={easy:10,normal:25,hard:50,legend:100};
+  score+=points[diff]; streak++; done++;
+  $("score").textContent=score;
+  $("streak").textContent=streak;
+  $("done").textContent=done;
+  $("challengeText").textContent="Challenge marked complete! Nice work, explorer. Generate your next mission when you're ready.";
+  current=null;
+});
+$("reset").addEventListener("click",()=>{
+  if(!confirm("Reset your score, streak and completed challenges?")) return;
+  score=0; streak=0; done=0; current=null;
+  $("score").textContent=0;
+  $("streak").textContent=0;
+  $("done").textContent=0;
+  $("challengeTitle").textContent="Ready, UG explorer?";
+  $("challengeText").textContent="Your run has been reset. Generate a new challenge!";
+  $("tag").textContent="YOUR NEXT MISSION";
+  $("rule").textContent="";
+});
+</script>
+</body>
+</html>
+
